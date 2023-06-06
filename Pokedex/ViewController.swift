@@ -14,12 +14,13 @@ class ViewController: UIViewController {
     //MARK: IBOULETS
     
     @IBOutlet weak var tableViewPokemon: UITableView!
-    @IBOutlet weak var textFieldBuscar: UITextField!
     
     //MARK: VARIABLES
     
     var pokemonArray: [Poke] = []
+    var secondaryPokemonArray: [Poke] = []
     var pokemonImages = [UIImage]()
+    var secondaryPokemonImages = [UIImage]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,16 +28,15 @@ class ViewController: UIViewController {
         // Registrar nueva celda
         tableViewPokemon.register(UINib(nibName: "CeldaPokemonTableViewCell", bundle: nil), forCellReuseIdentifier: "celda")
         
-        textFieldBuscar.delegate = self
         tableViewPokemon.delegate = self
         tableViewPokemon.dataSource = self
        
-        PokeProvider.shared.getAllPokemon { pokemon, images in
-            
+        PokeProvider.shared.getAllPokemon { [self] pokemon, images in
             // Asignar result success
             self.pokemonArray = pokemon
             self.pokemonImages = images.compactMap { $0 }
-            
+            self.secondaryPokemonArray = self.pokemonArray
+            self.secondaryPokemonImages = self.pokemonImages
             // Refrezcar thread main
             DispatchQueue.main.async {
                 self.tableViewPokemon.reloadData()
@@ -46,13 +46,14 @@ class ViewController: UIViewController {
     
     // MARK: IBACTIONS
     
-    @IBAction func textFieldBuscarAction(_ sender: Any) {
-        	
-        
-        textFieldBuscar.resignFirstResponder()
-           
-        
+    @IBAction func SearchHundler(_ sender: UITextField) {
+        if let searchText = sender.text {
+            pokemonArray = searchText.isEmpty ? secondaryPokemonArray :
+            secondaryPokemonArray.filter{ $0.name.lowercased().contains(searchText.lowercased()) }
+                tableViewPokemon.reloadData()
+            }
     }
+    
     
 }
 
@@ -70,11 +71,28 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource{
         let celda = tableViewPokemon.dequeueReusableCell(withIdentifier: "celda", for: indexPath) as! CeldaPokemonTableViewCell
         
         // Mostrar datos
+        
         celda.nombrePokemon.text = pokemonArray[indexPath.row].name
         celda.imagenPokemon.image = pokemonImages[indexPath.row]
-    
+        
+        
         return celda
         
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        //let senderData = (name: pokemonArray[indexPath.row].name, image: pokemonImages[indexPath.row])
+        
+        let viewController = ViewControllerPokemon()
+        
+        viewController.input = PokemonSelected(imagenPokemon: pokemonImages[indexPath.row], nombrePokemon: pokemonArray[indexPath.row].name)
+        
+        navigationController?.pushViewController(viewController, animated: true)
+        
+        
+
+        //performSegue(withIdentifier: "infoSegue", sender: senderData)
     }
 }
 
@@ -82,4 +100,10 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource{
 
 extension ViewController: UITextFieldDelegate {
         
+}
+
+extension UIStoryboard {
+  static func instantiate(viewController viewControllerName: String) -> UIViewController {
+    return UIStoryboard(name: viewControllerName, bundle: .main).instantiateViewController(withIdentifier: viewControllerName)
+  }
 }

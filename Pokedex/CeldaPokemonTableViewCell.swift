@@ -11,6 +11,7 @@ class CeldaPokemonTableViewCell: UITableViewCell {
 
     @IBOutlet weak var nombrePokemon: UILabel!
     @IBOutlet weak var imagenPokemon: UIImageView!
+    @IBOutlet weak var buttonSegue: UIButton!
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -22,6 +23,12 @@ class CeldaPokemonTableViewCell: UITableViewCell {
         super.setSelected(selected, animated: animated)
 
         // Configure the view for the selected state
+    }
+    
+    
+    @IBAction func buttonSegueAction(_ sender: Any) {
+        
+        
     }
     
 }
