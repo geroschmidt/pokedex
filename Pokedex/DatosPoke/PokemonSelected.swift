@@ -11,4 +11,5 @@ import UIKit
 struct PokemonSelected {
     let imagenPokemon: UIImage
     let nombrePokemon: String
+    
 }

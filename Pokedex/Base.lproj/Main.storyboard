@@ -47,24 +47,76 @@
                                     </tableView>
                                 </subviews>
                             </stackView>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="R1g-vF-Q87">
+                                <rect key="frame" x="176.66666666666666" y="406" width="40" height="40"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="40" id="1CB-ja-FoW"/>
+                                    <constraint firstAttribute="width" constant="40" id="bpO-Zf-xIG"/>
+                                </constraints>
+                            </activityIndicatorView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="WZ0-Nv-Wcn" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="5jN-FU-9ge"/>
+                            <constraint firstItem="R1g-vF-Q87" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="Mjq-g7-bQc"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="WZ0-Nv-Wcn" secondAttribute="trailing" constant="20" id="Zc3-mV-93O"/>
                             <constraint firstItem="WZ0-Nv-Wcn" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="10" id="hid-I4-SIm"/>
                             <constraint firstItem="WZ0-Nv-Wcn" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="q0C-Vc-GBg"/>
+                            <constraint firstItem="R1g-vF-Q87" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="sN9-yF-y6p"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="POKEDEX" id="VYX-pV-kb6"/>
                     <connections>
+                        <outlet property="activityIndicator" destination="R1g-vF-Q87" id="6d8-Ne-tRr"/>
                         <outlet property="tableViewPokemon" destination="6hm-p1-znv" id="tU5-3J-WI0"/>
+                        <segue destination="e9G-NJ-xeJ" kind="show" identifier="pokemonSegue" id="T0E-eb-2VC"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1057.2519083969464" y="-27.464788732394368"/>
+        </scene>
+        <!--Pokemon-->
+        <scene sceneID="oKS-uF-FVn">
+            <objects>
+                <viewController id="e9G-NJ-xeJ" customClass="VCPokemon" customModule="Pokedex" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="5rn-Mi-YG3">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="ycF-xY-vls">
+                                <rect key="frame" x="71.666666666666686" y="301" width="250" height="250"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="250" id="MDc-lt-cv1"/>
+                                    <constraint firstAttribute="width" constant="250" id="y8s-Tr-91O"/>
+                                </constraints>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IGY-2L-ZaH">
+                                <rect key="frame" x="164.66666666666666" y="581" width="63.666666666666657" height="33.666666666666629"/>
+                                <fontDescription key="fontDescription" name="Kailasa" family="Kailasa" pointSize="26"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="V63-8j-kGw"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="IGY-2L-ZaH" firstAttribute="centerX" secondItem="5rn-Mi-YG3" secondAttribute="centerX" id="DXV-Ec-W2z"/>
+                            <constraint firstItem="IGY-2L-ZaH" firstAttribute="top" secondItem="ycF-xY-vls" secondAttribute="bottom" constant="30" id="FQ5-Mh-u2o"/>
+                            <constraint firstItem="ycF-xY-vls" firstAttribute="centerX" secondItem="5rn-Mi-YG3" secondAttribute="centerX" id="YYn-n6-Ebg"/>
+                            <constraint firstItem="ycF-xY-vls" firstAttribute="centerY" secondItem="5rn-Mi-YG3" secondAttribute="centerY" id="jbq-UV-Zxk"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="daf-xy-Cvc"/>
+                    <connections>
+                        <outlet property="imgPokemon" destination="ycF-xY-vls" id="Tts-n3-6vk"/>
+                        <outlet property="nombrePokemon" destination="IGY-2L-ZaH" id="PEq-r6-7ca"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="wC1-AA-cUW" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2075.5725190839694" y="-27.464788732394368"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="7wL-v2-q9r">

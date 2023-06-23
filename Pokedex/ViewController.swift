@@ -13,6 +13,7 @@ class ViewController: UIViewController {
     
     //MARK: IBOULETS
     
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var tableViewPokemon: UITableView!
     
     //MARK: VARIABLES
@@ -24,6 +25,9 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        activityIndicator.hidesWhenStopped = false
+        activityIndicator.startAnimating()
         
         // Registrar nueva celda
         tableViewPokemon.register(UINib(nibName: "CeldaPokemonTableViewCell", bundle: nil), forCellReuseIdentifier: "celda")
@@ -47,17 +51,31 @@ class ViewController: UIViewController {
     // MARK: IBACTIONS
     
     @IBAction func SearchHundler(_ sender: UITextField) {
+        
         if let searchText = sender.text {
-            pokemonArray = searchText.isEmpty ? secondaryPokemonArray :
-            secondaryPokemonArray.filter{ $0.name.lowercased().contains(searchText.lowercased()) }
-                tableViewPokemon.reloadData()
+            if searchText.isEmpty {
+                //si esta vacio muestro el array completo
+                pokemonArray = secondaryPokemonArray
+                pokemonImages = secondaryPokemonImages
+            } else {
+                //si no filtro por nombre
+                //enumerated obtengo el indice
+                let filteredPokemons = secondaryPokemonArray.enumerated().filter { index, pokemon in
+                    return pokemon.name.lowercased().contains(searchText.lowercased())
+                }
+                pokemonArray = filteredPokemons.map { $0.element }
+                pokemonImages = filteredPokemons.map { secondaryPokemonImages[$0.offset] }
             }
+            tableViewPokemon.reloadData()
+        }
     }
     
     
 }
 
-// MARK: TABLA
+// MARK: Extensions
+
+//Table
 
 extension ViewController: UITableViewDelegate, UITableViewDataSource{
     
@@ -67,43 +85,36 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource{
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
         let celda = tableViewPokemon.dequeueReusableCell(withIdentifier: "celda", for: indexPath) as! CeldaPokemonTableViewCell
         
         // Mostrar datos
+        activityIndicator.stopAnimating()
+        activityIndicator.hidesWhenStopped = true
         
         celda.nombrePokemon.text = pokemonArray[indexPath.row].name
         celda.imagenPokemon.image = pokemonImages[indexPath.row]
-        
-        
         return celda
-        
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let selectedPokemonName = pokemonArray[indexPath.row].name
+        let selectedPokemonImage = pokemonImages[indexPath.row]
         
-        //let senderData = (name: pokemonArray[indexPath.row].name, image: pokemonImages[indexPath.row])
+        let pokemonSelected = PokemonSelected(imagenPokemon: selectedPokemonImage, nombrePokemon: selectedPokemonName)
         
-        let viewController = ViewControllerPokemon()
-        
-        viewController.input = PokemonSelected(imagenPokemon: pokemonImages[indexPath.row], nombrePokemon: pokemonArray[indexPath.row].name)
-        
-        navigationController?.pushViewController(viewController, animated: true)
-        
-        
-
-        //performSegue(withIdentifier: "infoSegue", sender: senderData)
+        performSegue(withIdentifier: "pokemonSegue", sender: pokemonSelected)
     }
+
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "pokemonSegue" {
+            if let destinationVC = segue.destination as? VCPokemon,
+               let pokemonData = sender as? PokemonSelected {
+                destinationVC.input = pokemonData
+            }
+        }
+    }
+
+
 }
 
-// MARK: FILTRADO BUSQUEDA
 
-extension ViewController: UITextFieldDelegate {
-        
-}
-
-extension UIStoryboard {
-  static func instantiate(viewController viewControllerName: String) -> UIViewController {
-    return UIStoryboard(name: viewControllerName, bundle: .main).instantiateViewController(withIdentifier: viewControllerName)
-  }
-}
